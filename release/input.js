@@ -38,6 +38,10 @@ var Input = React.createClass({
         }
     },
 
+    showErrorsAfterFocus: function showErrorsAfterFocus() {
+        return this.showErrors() && this.state.hasBeenFocused;
+    },
+
     render: function render() {
         var element = this.renderElement();
 
@@ -46,7 +50,7 @@ var Input = React.createClass({
         }
 
         var warningIcon = '';
-        if (this.showErrors() && this.state.hasBeenFocused) {
+        if (this.showErrorsAfterFocus()) {
             warningIcon = React.createElement(Icon, { symbol: 'remove', className: 'form-control-feedback' });
         }
 
@@ -55,7 +59,7 @@ var Input = React.createClass({
             {
                 label: this.props.label,
                 required: this.isRequired(),
-                hasErrors: this.showErrors() && this.state.hasBeenFocused,
+                hasErrors: this.showErrorsAfterFocus(),
                 layout: this.getLayout(),
                 htmlFor: this.getId()
             },
@@ -67,19 +71,22 @@ var Input = React.createClass({
     },
 
     renderElement: function renderElement() {
-        var className = 'form-control';
+        var classNames = ['form-control'];
         if (['range'].indexOf(this.props.type) !== -1) {
-            className = null;
+            classNames = [];
+        }
+        if (this.showErrorsAfterFocus()) {
+            classNames.push('has-errors');
         }
         return React.createElement('input', _extends({
-            className: className
+            className: classNames.join(' ')
         }, this.props, {
             id: this.getId(),
             label: null,
             value: this.getValue(),
             onChange: this.changeValue,
             disabled: this.isFormDisabled() || this.props.disabled,
-            onFocus: this.state.hasBeenFocused ? undefined : this.recordFocus
+            onFocus: this.state.hasBeenFocused ? null : this.recordFocus
         }));
     }
 
