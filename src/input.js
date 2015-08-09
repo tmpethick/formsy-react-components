@@ -92,12 +92,15 @@ var Input = React.createClass({
             classNames = [];
         }
         if (this.showErrorsAfterFocus()) {
-            classNames.push('has-errors');
+            classNames.push('has-error');
+        }
+        if (this.props.className) {
+            classNames.push(this.props.className);
         }
         return (
             <input
-                className={classNames.join(' ')}
                 {...this.props}
+                className={classNames.join(' ')}
                 id={this.getId()}
                 label={null}
                 value={this.getValue()}

@@ -76,11 +76,13 @@ var Input = React.createClass({
             classNames = [];
         }
         if (this.showErrorsAfterFocus()) {
-            classNames.push('has-errors');
+            classNames.push('has-error');
         }
-        return React.createElement('input', _extends({
-            className: classNames.join(' ')
-        }, this.props, {
+        if (this.props.className) {
+            classNames.push(this.props.className);
+        }
+        return React.createElement('input', _extends({}, this.props, {
+            className: classNames.join(' '),
             id: this.getId(),
             label: null,
             value: this.getValue(),
