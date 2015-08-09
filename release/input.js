@@ -21,7 +21,8 @@ var Input = React.createClass({
 
     getDefaultProps: function getDefaultProps() {
         return {
-            type: 'text'
+            type: 'text',
+            hasBeenFocused: false
         };
     },
 
@@ -29,6 +30,12 @@ var Input = React.createClass({
         var value = event.currentTarget.value;
         this.setValue(value);
         this.props.onChange(this.props.name, value);
+    },
+
+    recordFocus: function recordFocus() {
+        if (!this.state.hasBeenFocused) {
+            this.setState({ hasBeenFocused: true });
+        }
     },
 
     render: function render() {
@@ -39,7 +46,7 @@ var Input = React.createClass({
         }
 
         var warningIcon = '';
-        if (this.showErrors()) {
+        if (this.showErrors() && this.state.hasBeenFocused) {
             warningIcon = React.createElement(Icon, { symbol: 'remove', className: 'form-control-feedback' });
         }
 
@@ -48,7 +55,7 @@ var Input = React.createClass({
             {
                 label: this.props.label,
                 required: this.isRequired(),
-                hasErrors: this.showErrors(),
+                hasErrors: this.showErrors() && this.state.hasBeenFocused,
                 layout: this.getLayout(),
                 htmlFor: this.getId()
             },
@@ -71,7 +78,8 @@ var Input = React.createClass({
             label: null,
             value: this.getValue(),
             onChange: this.changeValue,
-            disabled: this.isFormDisabled() || this.props.disabled
+            disabled: this.isFormDisabled() || this.props.disabled,
+            onFocus: this.state.hasBeenFocused ? undefined : this.recordFocus
         }));
     }
 
